@@ -1,0 +1,33 @@
+{
+  "evaluation": {
+    "source": {
+      "name": "record_count",
+      "display": "record_count",
+      "aggregation": "COUNT"
+    },
+    "comparison_operator": "LESS_THAN",
+    "threshold": {
+      "column": {
+        "name": "latest_date",
+        "display": "latest_date",
+        "aggregation": "COUNT"
+      }
+    },
+    "notification": {
+      "retrigger_seconds": 0,
+      "notify_on_ok": false
+    }
+  },
+  "schedule": {
+    "quartz_cron_schedule": "28 47 4/8 * * ?",
+    "timezone_id": "Asia/Kolkata"
+  },
+  "query_lines": [
+    "-- Check if yesterday’s data is loaded properly\r",
+    "SELECT \r",
+    "    COUNT(*) AS record_count,\r",
+    "    MAX(date) AS latest_date\r",
+    "FROM aws_curateddata.default.daily_summary\r",
+    "WHERE date = current_date() - INTERVAL 1 DAY;"
+  ]
+}
